@@ -26,16 +26,27 @@ public class Shoot : MonoBehaviour
     //Weapon Effects
     //MuzzleFlash
     public ParticleSystem muzzleFlash;
+    public ParticleSystem cartridgeEject;
+
+    //Audio
+    AudioSource gunAudioSource;
+    public AudioClip pistoAudioClip;
 
     private void Start()
     {
         muzzleFlash.Stop();
+        cartridgeEject.Stop();
+        gunAudioSource = GetComponent<AudioSource>();
     }
 
     void OnShoot()
     {
         if(Time.time > nextFire)
         {
+            StartCoroutine(WeaponEffects());
+
+            gunAudioSource.PlayOneShot(pistoAudioClip);
+
             nextFire = Time.time + rof;
 
             currentAmmo--;
@@ -56,5 +67,14 @@ public class Shoot : MonoBehaviour
                 }
             }
         }
+    }
+
+    IEnumerator WeaponEffects()
+    {
+        muzzleFlash.Play();
+        cartridgeEject.Play();
+        yield return new WaitForEndOfFrame();
+        muzzleFlash.Stop();
+        cartridgeEject.Stop();
     }
 }
