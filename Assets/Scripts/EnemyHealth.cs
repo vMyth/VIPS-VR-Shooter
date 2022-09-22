@@ -8,6 +8,8 @@ public class EnemyHealth : MonoBehaviour
 
     EnemyAI enemyAI;
 
+    public bool isEnemyDead;
+
     private void Start()
     {
         enemyAI = GetComponent<EnemyAI>();
@@ -15,16 +17,20 @@ public class EnemyHealth : MonoBehaviour
 
     public void DeductHealth(float deductHealth)
     {
-        enemyHealth -= deductHealth;
-
-        if(enemyHealth <= 0)
+        if (!isEnemyDead)
         {
-            EnemyDead();
+            enemyHealth -= deductHealth;
+
+            if (enemyHealth <= 0)
+            {
+                EnemyDead();
+            }
         }
     }
 
     void EnemyDead()
     {
+        isEnemyDead = true;
         enemyAI.EnemyDeathAnimation();
         Destroy(gameObject, 10f);
     }

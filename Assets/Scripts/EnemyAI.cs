@@ -66,7 +66,10 @@ public class EnemyAI : MonoBehaviour
 
     public void EnemyDeathAnimation()
     {
-        isDead = true;
-        anim.SetTrigger("isDead");
+        //if (!isDead)
+        {
+            isDead = true;
+            anim.SetTrigger("isDead");
+        }
     }
 }
