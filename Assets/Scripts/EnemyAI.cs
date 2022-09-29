@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -15,7 +16,6 @@ public class EnemyAI : MonoBehaviour
     public float damageAmount = 30f;
     float attackTime = 2f;
     public bool canAttack = true;
-
     private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -25,36 +25,48 @@ public class EnemyAI : MonoBehaviour
 
     private void Update()
     {
-        if (!PlayerHealth.singleton.isDead)
+        if (!isDead && !PlayerHealth.singleton.isDead)
         {
             float distance = Vector3.Distance(transform.position, target.position);
 
-            if (distance > 2 && !isDead)
+            if (distance > 2)
             {
-                agent.updatePosition = true;
-                agent.SetDestination(target.position);
-                anim.SetBool("isWalking", true);
-                anim.SetBool("isAttacking", false);
+                Chase();
             }
             else if (canAttack)
             {
-                Vector3 direction = target.position - transform.position;
-                direction.y = 0;
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), 5f * Time.deltaTime);
-                agent.updatePosition = false;
-                anim.SetBool("isWalking", false);
-                anim.SetBool("isAttacking", true);
-                StartCoroutine(AttackTime());
+                Attack();
             }
         }
         else
         {
-            agent.updatePosition = false;
-            anim.SetBool("isWalking", false);
-            anim.SetBool("isAttacking", false);
+            Disable();
         }
     }
 
+    private void Chase()
+    {
+        agent.updatePosition = true;
+        agent.SetDestination(target.position);
+        anim.SetBool("isWalking", true);
+        anim.SetBool("isAttacking", false);
+    }
+    private void Attack()
+    {
+        Vector3 direction = target.position - transform.position;
+        direction.y = 0;
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), 5f * Time.deltaTime);
+        agent.updatePosition = false;
+        anim.SetBool("isWalking", false);
+        anim.SetBool("isAttacking", true);
+        StartCoroutine(AttackTime());
+    }
+    private void Disable()
+    {
+        agent.updatePosition = false;
+        anim.SetBool("isWalking", false);
+        anim.SetBool("isAttacking", false);
+    }
     IEnumerator AttackTime()
     {
         canAttack = false;

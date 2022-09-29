@@ -10,6 +10,8 @@ public class EnemyHealth : MonoBehaviour
 
     public bool isEnemyDead;
 
+    public Collider[] enemyColliders;
+
     private void Start()
     {
         enemyAI = GetComponent<EnemyAI>();
@@ -30,7 +32,12 @@ public class EnemyHealth : MonoBehaviour
 
     void EnemyDead()
     {
+        enemyHealth = 0f;
         isEnemyDead = true;
+        foreach (var col in enemyColliders)
+        {
+            col.enabled = false;
+        }
         enemyAI.EnemyDeathAnimation();
         Destroy(gameObject, 10f);
     }

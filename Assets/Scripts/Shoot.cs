@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
+using TMPro;
 using UnityEngine;
 
 public class Shoot : MonoBehaviour
@@ -23,9 +24,13 @@ public class Shoot : MonoBehaviour
     [SerializeField]
     float weaponRange;
 
-    //For Deducting Enemy Heakth with Each Shot
+    //For Deducting Enemy Health with Each Shot
     [SerializeField] 
     float damageEnemy = 10f;
+
+    [SerializeField]
+    float headShotDamage = 100f;
+
 
     //Weapon Effects
     //MuzzleFlash
@@ -36,6 +41,7 @@ public class Shoot : MonoBehaviour
     AudioSource gunAudioSource;
     public AudioClip fireAudioClip;
     public AudioClip dryFireAudioClip;
+    public AudioClip headShotAudioClip;
 
     //Bullet Impact Effect
     public GameObject bloodEffect;
@@ -44,13 +50,19 @@ public class Shoot : MonoBehaviour
     //Shooting Animations
     public Animator anim;
 
+    //Display Ammo on Screen
+    public TextMeshProUGUI ammoText;
+
     private void Start()
     {
         muzzleFlash.Stop();
         cartridgeEject.Stop();
         gunAudioSource = GetComponent<AudioSource>();
     }
-
+    private void Update()
+    {
+        ammoText.text = currentAmmo.ToString() + " / " + carriedAmmo.ToString();
+    }
     void OnShoot()
     {
         if (!isReloading)
@@ -110,9 +122,18 @@ public class Shoot : MonoBehaviour
                 EnemyHealthScript.DeductHealth(damageEnemy);
                 if (!hit.transform.GetComponent<EnemyHealth>().isEnemyDead) Instantiate(bloodEffect, hit.point, Quaternion.identity);
             }
+            else if (hit.transform.tag == "Head")
+            {
+                Debug.Log("HeadShot");
+                EnemyHealth EnemyHealthScript = hit.transform.GetComponentInParent<EnemyHealth>();
+                EnemyHealthScript.DeductHealth(headShotDamage);
+                if (!hit.transform.GetComponentInParent<EnemyHealth>().isEnemyDead) Instantiate(bloodEffect, hit.point, Quaternion.identity);
+                hit.transform.gameObject.SetActive(false);
+                gunAudioSource.PlayOneShot(headShotAudioClip);
+            }
             else
             {
-                Debug.Log("SOMETHING ELSE SHOT");
+                Debug.Log(hit.transform.name);
                 Instantiate(wallEffect, hit.point, Quaternion.FromToRotation(Vector3.forward, hit.normal));
             }
         }
@@ -134,7 +155,7 @@ public class Shoot : MonoBehaviour
             timer -= Time.deltaTime;
             yield return null;
         }
-        if(timer <= 0)
+        if (timer <= 0)
         {
             isReloading = false;
             int bulletsNeededToFillMag = maxAmmo - currentAmmo;

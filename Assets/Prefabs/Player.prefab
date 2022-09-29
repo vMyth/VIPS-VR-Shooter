@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 2069609703959330296}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -220,8 +220,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6935617597290880660}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.375, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.885, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -391,7 +391,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Damping: {x: 0, y: 0, z: 0}
-  ShoulderOffset: {x: 0, y: 0, z: 0}
+  ShoulderOffset: {x: 0, y: 0.45, z: 0}
   VerticalArmLength: 0
   CameraSide: 0.6
   CameraDistance: 0
@@ -427,7 +427,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7287210924047598105}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.375, z: 0}
+  m_LocalPosition: {x: 0, y: 0.885, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -464,7 +464,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7777778, y: 1}
+    m_SensorSize: {x: 1.2281907, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -487,6 +487,7 @@ GameObject:
   - component: {fileID: 561905932351212580}
   - component: {fileID: 6305736584378956456}
   - component: {fileID: 7722588346660251352}
+  - component: {fileID: 251010960}
   - component: {fileID: 2069609703944904664}
   - component: {fileID: 773929859}
   m_Layer: 8
@@ -504,7 +505,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7722588346660251348}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.94, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -694,6 +695,21 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &251010960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7722588346660251348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7facb63acc1f26f4cae9bd94c2cde751, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentHealth: 0
+  maxHealth: 100
+  isDead: 0
 --- !u!114 &2069609703944904664
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -706,14 +722,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9e31c793ce0e4743af8ea6c6678ae8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentAmmo: 100
+  currentAmmo: 12
+  maxAmmo: 12
+  carriedAmmo: 60
+  isReloading: 0
   shootPoint: {fileID: 2069609702626332593}
   rof: 0.3
   weaponRange: 1000
-  damageEnemy: 10
+  damageEnemy: 50
   muzzleFlash: {fileID: 2195784205435936009}
   cartridgeEject: {fileID: 2163932320186794878}
-  pistoAudioClip: {fileID: 8300000, guid: 2c404ebcf98e4734882d51ed8738f986, type: 3}
+  fireAudioClip: {fileID: 8300000, guid: 2c404ebcf98e4734882d51ed8738f986, type: 3}
+  dryFireAudioClip: {fileID: 8300000, guid: 4f8f291944ce934408ae16a60c5e78ec, type: 3}
+  bloodEffect: {fileID: 1000010191825552, guid: 83e55d3418297934fab882559d009285, type: 3}
+  wallEffect: {fileID: 1000010355441670, guid: 02a509a7fa70ed740ba4197e20c5d32d, type: 3}
+  anim: {fileID: 986255170}
 --- !u!82 &773929859
 AudioSource:
   m_ObjectHideFlags: 0
@@ -877,8 +900,67 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -0.403
       objectReference: {fileID: 0}
+    - target: {fileID: 451536, guid: f44c0154ed6f64643b4f771d833c403c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.55374503
+      objectReference: {fileID: 0}
+    - target: {fileID: 451536, guid: f44c0154ed6f64643b4f771d833c403c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.8326863
+      objectReference: {fileID: 0}
+    - target: {fileID: 451536, guid: f44c0154ed6f64643b4f771d833c403c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.000000052154064
+      objectReference: {fileID: 0}
+    - target: {fileID: 451536, guid: f44c0154ed6f64643b4f771d833c403c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.000000018626451
+      objectReference: {fileID: 0}
+    - target: {fileID: 451536, guid: f44c0154ed6f64643b4f771d833c403c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -112.751
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f44c0154ed6f64643b4f771d833c403c, type: 3}
+--- !u!1 &2069609702380261035 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 175562, guid: f44c0154ed6f64643b4f771d833c403c, type: 3}
+  m_PrefabInstance: {fileID: 2069609702380102497}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &986255170
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2069609702380261035}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d658b8a38a60e664e99b32450bd27ac2, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &986255171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2069609702380261035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b415503e09404b4b9a76d7f60c0f346, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerAudioSource: {fileID: 773929859}
+  reloadAudio: {fileID: 8300000, guid: 1bc660090ea2d874eaa12707abedb40a, type: 3}
 --- !u!4 &2069609702380528811 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 427978, guid: f44c0154ed6f64643b4f771d833c403c, type: 3}
