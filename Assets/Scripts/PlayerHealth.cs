@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
@@ -46,6 +47,16 @@ public class PlayerHealth : MonoBehaviour
         {
             if (!isDead) Dead();
         }
+
+        if(currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+    }
+
+    public void AddHealth(float addOnHealth)
+    {
+        currentHealth += addOnHealth;
     }
 
     public void DamagePlayer(float damage)
@@ -66,5 +77,12 @@ public class PlayerHealth : MonoBehaviour
         isDead = true;
         Debug.Log("PLAYER DEAD");
         Destroy(gameObject.GetComponent<Shoot>());
+        Shoot.GameOver();
+        //StartCoroutine(ReloadScene());
+    }
+    IEnumerator ReloadScene()
+    {
+        yield return new WaitForSeconds(2f);
+        SceneManager.LoadScene(1);
     }
 }

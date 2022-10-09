@@ -17015,7 +17015,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9504c8af97c651f4e966950de4b3437e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 30
+  damageAmount: 20
   canAttack: 1
 --- !u!195 &2998153412019162106
 NavMeshAgent:

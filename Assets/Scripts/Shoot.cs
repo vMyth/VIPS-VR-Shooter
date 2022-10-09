@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Shoot : MonoBehaviour
 {
@@ -53,6 +54,14 @@ public class Shoot : MonoBehaviour
     //Display Ammo on Screen
     public TextMeshProUGUI ammoText;
 
+    //Helping in PickUp
+    public static bool canPickUp = false;
+
+    private void Awake()
+    {
+        Cursor.visible = false;
+    }
+
     private void Start()
     {
         muzzleFlash.Stop();
@@ -62,6 +71,18 @@ public class Shoot : MonoBehaviour
     private void Update()
     {
         ammoText.text = currentAmmo.ToString() + " / " + carriedAmmo.ToString();
+
+        PlayerPrefs.SetInt("Ammo", carriedAmmo + currentAmmo);
+        PlayerPrefs.SetFloat("Health", PlayerHealth.singleton.currentHealth);
+
+        if (EnemySpawner.enemiesActive)
+        {
+           Debug.Log(GameObject.FindGameObjectsWithTag("Enemy").Length);
+            if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0)
+            {
+                GameOver();
+            }
+        }
     }
     void OnShoot()
     {
@@ -83,6 +104,18 @@ public class Shoot : MonoBehaviour
     {
         if (currentAmmo == maxAmmo) return;
         Reload();
+    }
+
+    void OnPick()
+    {
+        if (DistancePickUp.activePickUp)
+        {
+            canPickUp = true;
+        }
+        else
+        {
+            canPickUp = false;
+        }
     }
     void Fire()
     {
@@ -172,5 +205,15 @@ public class Shoot : MonoBehaviour
         yield return new WaitForEndOfFrame();
         muzzleFlash.Stop();
         cartridgeEject.Stop();
+    }
+
+    public void AddAmmo(int addOnAmmo)
+    {
+        carriedAmmo += addOnAmmo;
+    }
+
+    public static void GameOver()
+    {
+        SceneManager.LoadScene(2);
     }
 }

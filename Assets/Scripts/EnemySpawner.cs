@@ -10,6 +10,8 @@ public class EnemySpawner : MonoBehaviour
 
     Collider trigger;
 
+    public static bool enemiesActive = false;
+
     private void Start()
     {
         trigger = GetComponent<Collider>();
@@ -20,6 +22,7 @@ public class EnemySpawner : MonoBehaviour
         if(other.tag == "Player")
         {
             SpawnEnemies();
+            enemiesActive = true;
             trigger.enabled = false;
         }
     }
